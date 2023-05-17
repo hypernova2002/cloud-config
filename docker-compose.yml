@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  config:
+    build: .
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/cloud-config
+    networks:
+      - cloud-config
+
+  yardoc:
+    build: .
+    command: yard server -r
+    volumes:
+      - .:/cloud-config
+    ports:
+      - 8808:8808
+    networks:
+      - cloud-config
+
+networks:
+  cloud-config:
+    name: cloud_config
