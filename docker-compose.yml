@@ -4,8 +4,12 @@ services:
     build: .
     stdin_open: true
     tty: true
+    environment:
+      SSH_AUTH_SOCK: /ssh-agent
     volumes:
       - .:/cloud-config
+      - ~/.gitconfig:/root/.gitconfig
+      - /run/host-services/ssh-auth.sock:/ssh-agent
     networks:
       - cloud-config
 
