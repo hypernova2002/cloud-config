@@ -6,6 +6,7 @@ services:
     tty: true
     volumes:
       - .:/cloud-config
+      - ~/.gitconfig:/root/.gitconfig
     networks:
       - cloud-config
 
