@@ -2,7 +2,9 @@
 
 A library to modernise the way applications fetch configuration. Typically an application will use environment variables and settings files to store and retrieve configurations, but there are many issues with this approach. Often environment variables create a security risk and settings files hard code infrastructure dependencies into the code. Changing configuration settings will usually require redeploying large parts of the infrastructure and perhaps even need to go through the application deployment lifecycle.
 
-A modern approach stores configuration remotely, often using key/value databases. Storing configurations in a single database, separately from the codebase reduces infrastructure dependency. Configuration updates can automatically sync with any application, without requiring redeployments. Security risk is greatly reduced, since the configurations can be securely stored. Another goal with this approach is creating an environmentless codebase. The application no longer needs to know which environment it's running in, since all the configuration is handled by the infrastucture.
+A modern approach stores configuration remotely, often using key/value databases. Storing configurations in a single database, separately from the codebase reduces infrastructure dependency. Configuration updates can automatically sync with any application, without requiring redeployments. Security risk is greatly reduced, since configurations can be securely stored. Another goal with this approach is creating an environmentless codebase. The application no longer needs to know which environment it's running in, since all the configuration is handled by the infrastucture.
+
+Another common problem is password rotation. A typical application will need to be restarted or even redeployed when the configuration settings change, such as rotating passwords. CloudConfig can handle this elegantly, improving the uptime and resilience of the application.
 
 ## Installation
 
@@ -16,7 +18,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
-CloudConfig can be configured to fetch keys from multiple providers. Since CloudConfig will need to know which provider has the correct key, all the keys will need to be preconfigured. An example configuration may look like
+CloudConfig can be configured to fetch keys from multiple providers. Since CloudConfig will need to know which provider has the correct key, all the keys will need to be preconfigured. Duplicate keys will be overriden with the latest provider. An example configuration may look like
 
 ```ruby
 CloudConfig.configure do
@@ -25,6 +27,18 @@ CloudConfig.configure do
     setting :api_url
   end
 end
+```
+
+Fetch a setting with
+
+```ruby
+url = CloudConfig.get(:api_url)
+```
+
+If caching has been configured, the cache can be reset using
+
+```ruby
+url = CloudConfig.get(:api_url, reset_cache: true)
 ```
 
 ### Configuration Options
@@ -66,7 +80,7 @@ end
 
 ### Preloading
 
-CloudConfig can preload all the keys configured for preload enabled providers. A cache client must be configured, otherwise
+CloudConfig can preload all the keys configured for preload enabled providers. A cache client must also be configured, otherwise
 preloading won't do anything.
 
 ```ruby
@@ -74,6 +88,7 @@ CloudConfig.configure do
   cache_client CloudConfig::Cache::InMemory.new
 
   provider :in_memory, preload: true do
+    setting :key1
   end
 end
 ```
@@ -84,9 +99,77 @@ Call preload to cache all the keys.
 CloudConfig.preload
 ```
 
+### Custom Providers
+
+CloudConfig comes equipped with a set of providers for fetching configuration from remote datastores. The limit set of providers will not be sufficient for most real world applications, so creating custom providers will be necessary. There is a very simple interface consisting of 3 methods necessary for creating a custom provider.
+
+```ruby
+class CustomProvider
+  # Define initialize with a params argument.
+  def initialize(params = {}); end
+
+  # Define `get` for fetching keys from the remote datastore
+  def get(key); end
+
+  # Define `set` for storing keys in the remote datastore
+  def set(key, value); end
+end
+```
+
+Specify the class when configuring the custom provider.
+
+```ruby
+CloudConfig.configure do
+  provider :custom_provider, provider_class: CustomProvider do
+  end
+end
+```
+
+### Custom Cache
+
+Defining a custom cache client will require an interface of 3 methods.
+
+```ruby
+class CustomCache
+  # Define `key?` for checking whether the key exists in the cache client.
+  # This check allows nil values to be cached.
+  def key?(key); end
+
+  # Define `get` for fetching keys from the cache
+  def get(key); end
+
+  # Define `set` for storing keys in the cache
+  def set(key, value); end
+end
+```
+
+Configure CloudConfig to use the cache in the usual way
+
+```ruby
+CloudConfig.configure do
+  cache_client CustomCache.new
+end
+```
+
+## Connection Pooling
+
+CloudConfig does not do any connection pooling. It is the responsibility of the application to handle connection pooling. For example, Rails handles its own connection pools, so CloudConfig will not attempt to interfere with the pool.
+
+## Examples
+
+There are some example configurations in the [examples](examples) folder. In the terminal, execute
+
+    $ examples/001_parameter_store.rb
+
+These examples make use of AWS infrastructure, so make sure the AWS enviroment variables have been correctly configured.
+
+    $ export AWS_ACCESS_KEY_ID=
+    $ export AWS_SECRET_ACCESS_KEY=
+    $ export AWS_REGION=
+
 ## Development
 
-It's recommended to use Docker when working with the library. Assuming Docker is installed, run
+It's recommended to use Docker when working with this library. Assuming Docker is installed, run
 
     $ docker-compose run config /bin/bash
 
