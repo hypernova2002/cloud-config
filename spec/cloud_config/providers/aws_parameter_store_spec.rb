@@ -5,8 +5,9 @@ require_relative '../../../lib/cloud-config/providers/aws_parameter_store'
 RSpec.describe CloudConfig::Providers::AwsParameterStore do
   include Mocks::SSMClient
 
-  subject(:provider) { described_class.new }
+  subject(:provider) { described_class.new(options) }
 
+  let(:options) { {} }
   let(:parameter_key) { :test_parameter }
   let(:parameter_value) { :store_value }
 
@@ -22,6 +23,28 @@ RSpec.describe CloudConfig::Providers::AwsParameterStore do
     it 'returns nil for missing key' do
       expect { provider.get(:missing) }.to raise_error(Aws::SSM::Errors::ParameterNotFound)
     end
+
+    # rubocop:disable RSpec/InstanceVariable
+    context 'with encryption' do
+      it 'calls ssm parameter store with with_decryption set to true in `get` method' do
+        allow(@ssm_client).to receive(:get_parameter).and_call_original
+
+        provider.get(parameter_key, with_decryption: true)
+
+        expect(@ssm_client).to have_received(:get_parameter).with(name: parameter_key, with_decryption: true)
+      end
+
+      it 'calls ssm parameter store with with_decryption set to true in initializer' do
+        options[:with_decryption] = true
+
+        allow(@ssm_client).to receive(:get_parameter).and_call_original
+
+        provider.get(parameter_key)
+
+        expect(@ssm_client).to have_received(:get_parameter).with(name: parameter_key, with_decryption: true)
+      end
+    end
+    # rubocop:enable RSpec/InstanceVariable
   end
 
   describe 'set' do

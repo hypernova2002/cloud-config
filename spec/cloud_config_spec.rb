@@ -98,6 +98,12 @@ RSpec.describe CloudConfig do
       expect(config.get(:my_key)).to eql(setting_value)
     end
 
+    it 'gets key with store_options' do
+      config.get(:my_key, store_options: { option_setting: true })
+
+      expect(config.providers[:in_memory].provider).to have_received(:get).with(:my_key, option_setting: true)
+    end
+
     context 'with cache' do
       before do
         config.configure do

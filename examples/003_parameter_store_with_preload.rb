@@ -15,6 +15,7 @@ require 'benchmark'
 require 'cloud-config/cache/in_memory'
 require 'cloud-config/providers/aws_parameter_store'
 
+# @note: Make sure the `parameter_store_example` key is set in the parameter store
 CloudConfig.configure do
   cache_client CloudConfig::Cache::InMemory.new
 
@@ -27,12 +28,14 @@ CloudConfig.preload
 
 value = nil
 
-puts 'Fetching key parameter_store_example (cached)'
+puts 'Fetching key: parameter_store_example (cached)'
 time = Benchmark.measure { value = CloudConfig.get(:parameter_store_example) }
-puts "Fetched value #{value} in #{time.real.round(5)} seconds"
+puts "Fetched value: #{value} in #{time.real.round(5)} seconds"
 
 sleep 5
 
-puts 'Fetching key parameter_store_example'
+puts
+
+puts 'Fetching key: parameter_store_example'
 time = Benchmark.measure { value = CloudConfig.get(:parameter_store_example) }
-puts "Fetched value #{value} in #{time.real.round(5)} seconds"
+puts "Fetched value: #{value} in #{time.real.round(5)} seconds"

@@ -36,14 +36,15 @@ module CloudConfig
   #
   # @param key [String,Symbol] Key to lookup
   # @param reset_cache [Boolean] Whether the cache for the key should be reset
+  # @param store_options [Hash] Options used by the datastore when fetching the key
   #
   # @return [Object] Value of the key
-  def get(key, reset_cache: false)
+  def get(key, reset_cache: false, store_options: {})
     provider_config = providers_by_key[key]
 
     raise MissingKey, 'Key not found' if provider_config.nil?
 
-    load_key(provider_config, key, reset_cache:)
+    load_key(provider_config, key, reset_cache:, store_options:)
   end
 
   # Set the value of a key with the configured provider.
@@ -86,11 +87,12 @@ module CloudConfig
   # @param provider_config [CloudConfig::ProviderConfig] provider configuration
   # @param key [String,Symbol] Key to fetch
   # @param reset_cache [Boolean] Whether the cache for the key should be reset
+  # @param store_options [Hash] Options used by the datastore when fetching the key
   #
   # @return [Object] Value of the key
-  def load_key(provider_config, key, reset_cache: false)
+  def load_key(provider_config, key, reset_cache: false, store_options: {})
     with_cache(key, reset_cache:, expire_in: provider_config.settings[key][:cache]) do
-      provider_config.provider.get(key)
+      provider_config.provider.get(key, store_options)
     end
   end
 

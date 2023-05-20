@@ -4,7 +4,7 @@ A library to modernise the way applications fetch configuration. Typically an ap
 
 A modern approach stores configuration remotely, often using key/value databases. Storing configurations in a single database, separately from the codebase reduces infrastructure dependency. Configuration updates can automatically sync with any application, without requiring redeployments. Security risk is greatly reduced, since configurations can be securely stored. Another goal with this approach is creating an environmentless codebase. The application no longer needs to know which environment it's running in, since all the configuration is handled by the infrastucture.
 
-Another common problem is password rotation. A typical application will need to be restarted or even redeployed when the configuration settings change, such as rotating passwords. CloudConfig can handle this elegantly, improving the uptime and resilience of the application.
+Another common problem is password rotation. A typical application will need to be restarted or even redeployed when the configuration settings change. CloudConfig can handle this elegantly, improving the uptime and resilience of applications.
 
 ## Installation
 
@@ -39,6 +39,12 @@ If caching has been configured, the cache can be reset using
 
 ```ruby
 url = CloudConfig.get(:api_url, reset_cache: true)
+```
+
+If the datastore has configurable options
+
+```ruby
+url = CloudConfig.get(:api_url, store_options: { with_decryption: true })
 ```
 
 ### Configuration Options
@@ -109,7 +115,7 @@ class CustomProvider
   def initialize(params = {}); end
 
   # Define `get` for fetching keys from the remote datastore
-  def get(key); end
+  def get(key, opts = {}); end
 
   # Define `set` for storing keys in the remote datastore
   def set(key, value); end
