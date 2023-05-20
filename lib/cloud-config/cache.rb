@@ -30,7 +30,7 @@ module CloudConfig
       #
       # @return [Object] Value of the key
       def with_cache(key, options = {})
-        return cache.get(key) if cache&.key?(key)
+        return cache.get(key) if !options[:reset_cache] && cache&.key?(key)
 
         value = yield
 

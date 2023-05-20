@@ -55,7 +55,7 @@ module CloudConfig
       # @param value [Object] Value of the key
       # @option options [Hash] :expire_in Time in seconds until key expires
       def set(key, value, options = {})
-        expire_in = options.fetch(:expire_in) { DEFAULT_EXPIRE }
+        expire_in = options[:expire_in] || DEFAULT_EXPIRE
 
         expire_at = Time.now + expire_in
 

@@ -35,14 +35,15 @@ module CloudConfig
   # Fetch the value of a key using the appropriate provider.
   #
   # @param key [String,Symbol] Key to lookup
+  # @param reset_cache [Boolean] Whether the cache for the key should be reset
   #
   # @return [Object] Value of the key
-  def get(key)
-    provider_config = providers.values.find { |provider| provider.settings.key?(key) }
+  def get(key, reset_cache: false)
+    provider_config = providers_by_key[key]
 
     raise MissingKey, 'Key not found' if provider_config.nil?
 
-    load_key(provider_config, key)
+    load_key(provider_config, key, reset_cache:)
   end
 
   # Set the value of a key with the configured provider.
@@ -50,7 +51,7 @@ module CloudConfig
   # @param key [String,Symobl] Key to update
   # @param value [Object] Value of key
   def set(key, value)
-    provider_config = providers.values.find { |provider| provider.settings.key?(key) }
+    provider_config = providers_by_key[key]
 
     raise MissingKey, 'Key not found' if provider_config.nil?
 
@@ -84,10 +85,11 @@ module CloudConfig
   #
   # @param provider_config [CloudConfig::ProviderConfig] provider configuration
   # @param key [String,Symbol] Key to fetch
+  # @param reset_cache [Boolean] Whether the cache for the key should be reset
   #
   # @return [Object] Value of the key
-  def load_key(provider_config, key)
-    with_cache(key, expire_in: provider_config.settings[key][:cache]) do
+  def load_key(provider_config, key, reset_cache: false)
+    with_cache(key, reset_cache:, expire_in: provider_config.settings[key][:cache]) do
       provider_config.provider.get(key)
     end
   end
@@ -95,6 +97,9 @@ module CloudConfig
   # Reset the {CloudConfig} configuration
   def reset!
     @cache = nil
-    @provider = nil
+    @providers = {}
+    @providers_by_key = {}
   end
 end
+
+CloudConfig.reset!

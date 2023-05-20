@@ -14,6 +14,10 @@ module CloudConfig
       #   @return [Hash<Symbol,ProviderConfig>]
       attr_reader :providers
 
+      # @!attribute [r] Fetch provider configuration by setting key
+      #   @return [Hash<Symbol,ProviderConfig>]
+      attr_reader :providers_by_key
+
       # Add a provider to the list of provider configurations.
       #
       # @param provider_name [Symbol] Name of the provider
@@ -25,6 +29,18 @@ module CloudConfig
         provider_config.instance_eval(&blk) if blk
         @providers ||= {}
         @providers[provider_name] = provider_config
+
+        update_provider_keys(provider_config)
+      end
+
+      # Update {#providers_by_key} with settings from the provider config.
+      #
+      # @param provider_config [ProviderConfig] Provider config containing the keys
+      def update_provider_keys(provider_config)
+        @providers_by_key ||= {}
+        provider_config.settings.each_key do |key|
+          @providers_by_key[key] = provider_config
+        end
       end
     end
   end

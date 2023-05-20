@@ -34,10 +34,6 @@ module CloudConfig
       def set(key, value)
         client.put_parameter(name: key, value:)
       end
-
-      # def client
-      #   @client ||= Aws::SSM::Client.new
-      # end
     end
   end
 end
