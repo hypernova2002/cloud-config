@@ -88,7 +88,7 @@ module CloudConfig
   # @param reset_cache [Boolean] Whether the cache for the key should be reset
   #
   # @return [Object] Value of the key
-  def load_key(provider_config, key, reset_cache:)
+  def load_key(provider_config, key, reset_cache: false)
     with_cache(key, reset_cache:, expire_in: provider_config.settings[key][:cache]) do
       provider_config.provider.get(key)
     end
