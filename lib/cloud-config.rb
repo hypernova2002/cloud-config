@@ -97,7 +97,9 @@ module CloudConfig
   # Reset the {CloudConfig} configuration
   def reset!
     @cache = nil
-    @provider = nil
-    @providers_by_key = nil
+    @providers = {}
+    @providers_by_key = {}
   end
 end
+
+CloudConfig.reset!
