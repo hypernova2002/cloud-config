@@ -4,7 +4,7 @@ A library to modernise the way applications fetch configuration. Typically an ap
 
 A modern approach stores configuration remotely, often using key/value databases. Storing configurations in a single database, separately from the codebase reduces infrastructure dependency. Configuration updates can automatically sync with any application, without requiring redeployments. Security risk is greatly reduced, since configurations can be securely stored. Another goal with this approach is creating an environmentless codebase. The application no longer needs to know which environment it's running in, since all the configuration is handled by the infrastucture.
 
-Another common problem is password rotation. A typical application will need to be restarted or even redeployed when the configuration settings change. CloudConfig can handle this elegantly, improving the uptime and resilience of applications.
+Another common problem is password rotation. A typical application will need to be restarted or even redeployed when the configuration settings change. CloudConfig can handle this elegantly, improving application uptime and resilience.
 
 ## Installation
 
