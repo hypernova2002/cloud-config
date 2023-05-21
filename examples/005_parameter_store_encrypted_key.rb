@@ -27,6 +27,14 @@ puts "Fetched value: #{value}"
 
 puts
 
+CloudConfig.reset!
+
+CloudConfig.configure do
+  provider :aws_parameter_store do
+    setting :encrypted_key, with_decryption: true
+  end
+end
+
 puts 'Fetching key: encrypted_key (decrypt)'
-value = CloudConfig.get(:encrypted_key, store_options: { with_decryption: true })
+value = CloudConfig.get(:encrypted_key)
 puts "Fetched value: #{value}"

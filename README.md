@@ -41,12 +41,6 @@ If caching has been configured, the cache can be reset using
 url = CloudConfig.get(:api_url, reset_cache: true)
 ```
 
-If the datastore has configurable options
-
-```ruby
-url = CloudConfig.get(:api_url, store_options: { with_decryption: true })
-```
-
 ### Configuration Options
 
 ```ruby
@@ -80,6 +74,11 @@ CloudConfig.configure do
   # Configure the setting to be cacheable
   provider :in_memory do
     setting :key1, cache: 60 # 60 seconds
+  end
+
+  # If the datastore has configurable options
+  provider :aws_parameter_store do
+    setting :key1, with_decryption: true
   end
 end
 ```
