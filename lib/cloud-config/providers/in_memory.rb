@@ -5,7 +5,7 @@ module CloudConfig
     # A class that acts as a provider for storing configuration in-memory
     #
     # @example
-    #   provider = InMemory.new # Assuming AWS credentials are already configured
+    #   provider = CloudConfig::Providers::InMemory.new # Assuming AWS credentials are already configured
     #   provider.set(:example_key, :example_value)
     #   provider.get(:example_key) #=> 'example_value'
     class InMemory

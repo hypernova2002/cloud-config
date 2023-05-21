@@ -2,10 +2,10 @@
 
 module CloudConfig
   module Providers
-    # A class for fetching configuration from the AWS Parameter Store
+    # A class for fetching configuration from AWS Parameter Store
     #
     # @example
-    #   provider = AwsParameterStore.new # Assuming AWS credentials are already configured
+    #   provider = CloudConfig::Providers::AwsParameterStore.new # Assuming AWS credentials are already configured
     #   provider.set(:example_key, :example_value)
     #   provider.get(:example_key) #=> 'example_value'
     class AwsParameterStore

@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   spec.add_dependency 'parallel'
 
+  spec.add_development_dependency 'aws-sdk-secretsmanager'
   spec.add_development_dependency 'aws-sdk-ssm'
   spec.add_development_dependency 'mock_redis'
   spec.add_development_dependency 'pry'
