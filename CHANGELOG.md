@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.2.2] - 2023-05-21
+
+Enhancements:
+
+- Add AWS Secrets Manager provider
+
 ## [Released]
 
 ## [0.2.1] - 2023-05-21

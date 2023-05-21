@@ -11,7 +11,6 @@ gemfile do
   gem 'cloud-config', path: '..'
 end
 
-require 'benchmark'
 require 'cloud-config/providers/aws_parameter_store'
 
 # @note: Make sure the `parameter_store_example` key is set in the parameter store

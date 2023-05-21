@@ -4,6 +4,7 @@ require 'timecop'
 
 require_relative '../lib/cloud-config'
 
+require_relative 'mocks/secrets_manager_client'
 require_relative 'mocks/ssm_client'
 
 RSpec.configure do |config|

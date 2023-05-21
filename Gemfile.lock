@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cloud-config (0.2.0)
+    cloud-config (0.2.2)
       parallel
 
 GEM
@@ -15,6 +15,9 @@ GEM
       aws-partitions (~> 1, >= 1.651.0)
       aws-sigv4 (~> 1.5)
       jmespath (~> 1, >= 1.6.1)
+    aws-sdk-secretsmanager (1.75.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-ssm (1.150.0)
       aws-sdk-core (~> 3, >= 3.165.0)
       aws-sigv4 (~> 1.1)
@@ -89,6 +92,7 @@ PLATFORMS
   aarch64-linux
 
 DEPENDENCIES
+  aws-sdk-secretsmanager
   aws-sdk-ssm
   cloud-config!
   mock_redis
