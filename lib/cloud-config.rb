@@ -90,7 +90,7 @@ module CloudConfig
   # @return [Object] Value of the key
   def load_key(provider_config, key, reset_cache: false)
     with_cache(key, reset_cache:, expire_in: provider_config.settings[key][:cache]) do
-      provider_config.provider.get(key)
+      provider_config.provider.get(key, provider_config.settings[key])
     end
   end
 

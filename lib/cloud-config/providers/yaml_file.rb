@@ -15,9 +15,10 @@ module CloudConfig
 
       # Create an instance of {YamlFile}
       #
-      # @option params [Hash] :filename Name of the YAML file
-      def initialize(params = {})
-        @contents = YAML.load_file(params[:filename]) || {}
+      # @param [Hash] opts Yaml file options
+      # @option opts [String] :filename Name of the YAML file
+      def initialize(opts = {})
+        @contents = YAML.load_file(opts[:filename]) || {}
       end
 
       # Fetch the value of the key
@@ -25,7 +26,7 @@ module CloudConfig
       # @param key [String,Symbol] Key to fetch
       #
       # @return [Object] Value of the key
-      def get(key)
+      def get(key, _opts = {})
         contents[key]
       end
 

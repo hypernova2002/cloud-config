@@ -41,5 +41,7 @@ rescue Faraday::ServerError
 
   sleep 1
 
+  puts
+
   retry
 end

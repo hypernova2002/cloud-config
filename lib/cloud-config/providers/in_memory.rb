@@ -14,7 +14,7 @@ module CloudConfig
       attr_reader :settings
 
       # Create an instance of {InMemory}
-      def initialize(_params = {})
+      def initialize(_opts = {})
         @settings = {}
       end
 
@@ -23,7 +23,7 @@ module CloudConfig
       # @param key [String,Symbol] Key to fetch
       #
       # @return [Object] Value of the key
-      def get(key)
+      def get(key, _opts = {})
         settings[key]
       end
 
